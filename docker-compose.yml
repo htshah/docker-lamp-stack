@@ -1,0 +1,39 @@
+version: '3'
+services:
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            MYSQL_USER: root
+            MYSQL_ROOT_PASSWORD: Root@123
+        links:
+            - mariadb:db
+        ports:
+            - 8089:80
+
+    php-apache:
+        build:
+            context: ./docker/php-apache
+        ports:
+            - 8088:80
+        volumes:
+            - "./DocumentRoot:/var/www/html"
+        links:
+            - mariadb:db
+
+    mariadb:
+        image: mariadb:10.3
+        ports:
+            - 33061:3306
+        volumes:
+            - mariadb:/var/lib/mysql
+        environment:
+            TZ: "Asia/Kolkata"
+            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+            MYSQL_ROOT_PASSWORD: "Root@123"
+            MYSQL_USER: 'testuser'
+            MYSQL_PASSWORD: 'testpassword'
+            MYSQL_DATABASE: 'db_hp'
+
+volumes:
+    mariadb:
+
